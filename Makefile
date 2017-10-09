@@ -12,7 +12,7 @@ main: main.o state.o render.o init.o mappings.o style.o sl_arr.o
 	$(CC) -o main.out main.o state.o render.o init.o mappings.o style.o sl_arr.o $(CCFLAGS) $(LINKFLAGS)
 
 
-debug: CCFLAGS += -g -O0
+debug: CCFLAGS += -g -v -O0
 debug: main
 
 

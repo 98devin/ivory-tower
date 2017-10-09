@@ -60,21 +60,32 @@ int main() {
     time_t t;
     srand((unsigned)time(&t));
     
+    
     Tile_ID display_tiles[SCREEN_TILES_WIDE][SCREEN_TILES_HIGH];
+
     for (uint8_t x = 0; x < SCREEN_TILES_WIDE; x++)
     for (uint8_t y = 0; y < SCREEN_TILES_HIGH; y++)
         display_tiles[x][y] = rand() % TILE_IDS_COUNT;
 
     
-    Style style_1 = style_rgb_sin();
-    Style style_2 = style_compose(style_from_palette(PALETTE_BG1), style_1);
+    Style darken = style_from_palette(PALETTE_BG1);
+    Style hover  = style(NULL, offset_hover_wave(), NULL);
+    Style rainbo = style_rgb_sin();
 
-    Style hover   = style(NULL, offset_hover_wave(), NULL);
-    Style style_3 = style_compose(style_1, hover);
-    Style style_4 = style_compose(style_2, hover);
+    Style style_0 = style_default();
+    Style style_1 = style_compose(style_0, rainbo);
 
-    Style styles[2][2] = { { style_1, style_2 }, 
-                           { style_3, style_4 } };
+    Style style_2 = style_compose(style_0, darken);
+    Style style_3 = style_compose(style_1, darken);
+
+    Style style_4 = style_compose(style_0, hover);
+    Style style_5 = style_compose(style_1, hover);
+
+    Style style_6 = style_compose(style_2, hover);
+    Style style_7 = style_compose(style_3, hover);
+
+    Style styles[2][4] = { { style_0, style_2, style_1, style_3 }, 
+                           { style_4, style_6, style_5, style_7 } };
 
 
 /*    }}}    */
@@ -102,10 +113,11 @@ int main() {
             pos.x = i;
             for (uint8_t j = 0; j < SCREEN_TILES_HIGH; j++) {
                 pos.y = j;
+                
                 draw_tile(
                     display_tiles[i][j],
                     pos,
-                    styles[j >= SCREEN_TILES_HIGH / 2][i >= SCREEN_TILES_WIDE / 2]
+                    styles[j / (SCREEN_TILES_HIGH / 2)][i / (SCREEN_TILES_WIDE / 4)]
                 );
             }
         }

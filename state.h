@@ -22,7 +22,7 @@
 // The number of tiles across and high
 // the screen will be capable of rendering (at 1:1 scale)
 #define SCREEN_TILES_WIDE 48u
-#define SCREEN_TILES_HIGH 27u
+#define SCREEN_TILES_HIGH 28u
 
 // The height and width of the screen,
 // in pixels (computed from the above variables, naturally).

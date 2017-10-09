@@ -14,7 +14,7 @@
 /* Primary render configuration */
 Render_Config render_config = {
     .palette = 
-        { { 0x80, 0x80, 0x80 },      // bg1
+        { { 0x60, 0x60, 0x60 },      // bg1
           { 0x35, 0x97, 0x68 },      // bg2
           { 0xA7, 0xD4, 0x6F },      // fg1
           { 0xFF, 0xED, 0x8F }  },   // fg2

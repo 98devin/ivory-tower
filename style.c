@@ -111,11 +111,11 @@ const Color *color_from_palette(Palette_Layer pl) {
 
 static const ColorRGB get_color_rgb_sin(void *data) {
     static uint8_t r, g, b;
-    static const double pi_13 = M_PI / 3;
+    static const double pi_13 =      M_PI / 3;
     static const double pi_23 = 2 * (M_PI / 3);
 
     uint32_t ticks = SDL_GetTicks();
-
+    
     r = (sin(ticks / 300.0)         + 1) * 127;
     g = (sin(ticks / 300.0 + pi_13) + 1) * 127;
     b = (sin(ticks / 300.0 + pi_23) + 1) * 127;
@@ -144,7 +144,7 @@ static const i16_pair get_offset_hover(void *data) {
     static int16_t h;
     
     uint32_t ticks = SDL_GetTicks();
-    h = sin(ticks / 200.0) * 8;
+    h = sin(ticks / 200.0) * (TILE_RENDER_HEIGHT / 4);
 
     return (i16_pair){ 0, h };
 }
@@ -170,7 +170,7 @@ static const i16_pair get_offset_hover_wave(void *data) {
     static int16_t h;
     
     uint32_t ticks = SDL_GetTicks();
-    h = sin(ticks / 100.0 + 100 * render_config.info.pos.x) * 8;
+    h = sin(ticks / 100.0 + 100 * render_config.info.pos.x + 50 * render_config.info.pos.y) * (TILE_RENDER_HEIGHT / 4);
 
     return (i16_pair){ 0, h };
 }
