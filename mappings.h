@@ -2,6 +2,13 @@
 #pragma once
 
 #include "types.h"
+#include "render.h"
 
 
-extern const Texture_Mapping default_texture_map;
+namespace Mappings {
+
+    const TextureMapping *default_texture_map();
+
+    Palette *default_palette();
+
+}

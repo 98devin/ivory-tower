@@ -1,6 +1,6 @@
 
-CC = gcc
-CCFLAGS = -fms-extensions -Wall
+CC = g++
+CCFLAGS = -std=c++1z
 INCLUDEFLAGS = -I.
 LINKFLAGS = -lSDL2 -lm
 
@@ -8,11 +8,11 @@ LINKFLAGS = -lSDL2 -lm
 all: debug
 
 
-main: main.o state.o render.o init.o mappings.o style.o sl_arr.o
-	$(CC) -o main.out main.o state.o render.o init.o mappings.o style.o sl_arr.o $(CCFLAGS) $(LINKFLAGS)
+main: main.o state.o render.o init.o mappings.o style.o
+	$(CC) -o main.out main.o state.o render.o init.o mappings.o style.o $(CCFLAGS) $(LINKFLAGS)
 
 
-debug: CCFLAGS += -g -v -O0
+debug: CCFLAGS += -g -O0 -Wall
 debug: main
 
 
@@ -28,5 +28,5 @@ clean:
 	rm -f *.o
 
 
-%.o: %.c
-	$(CC) -c $(CCFLAGS) $(INCLUDEFLAGS) $*.c
+%.o: %.cc
+	$(CC) -c $(CCFLAGS) $(INCLUDEFLAGS) $*.cc
