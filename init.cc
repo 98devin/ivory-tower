@@ -1,5 +1,6 @@
 
 #include <SDL2/SDL.h>
+#include <time.h>
 
 #include "types.h"
 #include "init.h"
@@ -13,9 +14,9 @@ bool init() {
 
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO)) {
-        fprintf(stderr, "SDL_Init Error: %s", SDL_GetError());
+        fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
         SDL_Quit();
-        return 1;
+        return false;
     }
 
 
@@ -24,11 +25,11 @@ bool init() {
         "SDL2 Test",
          SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
          SCREEN_WIDTH, SCREEN_HEIGHT,
-         SDL_WINDOW_OPENGL
+         SDL_WINDOW_SHOWN
     );
 
     if (window == NULL) {
-        fprintf(stderr, "SDL_CreateWindow Error: %s", SDL_GetError());
+        fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         SDL_Quit();
         return false;
     }
@@ -41,7 +42,7 @@ bool init() {
     );
 
     if (renderer == NULL) {
-        fprintf(stderr, "SDL_CreateRenderer Error: %s", SDL_GetError());
+        fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
         SDL_Quit();
@@ -126,9 +127,10 @@ bool init_texture_store(
     SDL_Rect src_rect{ 0, 0, tile_size.first, tile_size.second };
 
 
-    for (auto it = t_map->begin(); it != t_map->end(); ++it) {
+    for (const auto& it : *t_map) {
 
-        const auto [tile, pos] = *it;
+        Tile tile         = it.first;
+        Pair<uint8_t> pos = it.second;
 
         SDL_Texture *tex = SDL_CreateTexture(
             renderer,

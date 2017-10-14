@@ -1,8 +1,7 @@
 
-#include <SDL2/SDL.h>
+
 #include <stdio.h>
-#include <time.h>
-#include <math.h>
+#include <cmath>
 
 #include "types.h"
 #include "state.h"
@@ -13,7 +12,8 @@
 
 int main() {
 
-    init();
+    if (!init())
+        return -1;
 
 /*    {{{    */
         
