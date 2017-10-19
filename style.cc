@@ -87,7 +87,7 @@ void Scale::invalidate_dynamic() {
 */
 
 Style::Style(Color *color, Offset *offset, Scale *scale) 
-    : c(color), o(offset), s(scale) { }
+    : c{color}, o{offset}, s{scale} { }
 
 Style::Style(Color *color)
     : Style(color, offset_zero(), scale_default()) { }
@@ -99,7 +99,7 @@ Style::Style(Scale *scale)
     : Style(color_white(), offset_zero(), scale) { }
 
 
-const ColorRGB Style::color() const {
+const ColorRGBA Style::color() const {
     return c->value();
 }
 
@@ -120,19 +120,19 @@ const Pair<float> Style::scale() const {
 
 class StaticColor : public Color {
 
-    const ColorRGB val;
+    const ColorRGBA val;
 
 public:
 
-    StaticColor(uint8_t r, uint8_t g, uint8_t b)
-        : Color(CachingType::STATIC), val(r, g, b) { }
+    StaticColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
+        : Color(CachingType::STATIC), val(r, g, b, a) { }
 
-    StaticColor(ColorRGB *val) 
+    StaticColor(ColorRGBA *val) 
         : Color(CachingType::STATIC), val{*val} { }
 
     void invalidate() { }
 
-    const ColorRGB value() { return val; }
+    const ColorRGBA value() { return val; }
 
 };
 
@@ -203,7 +203,7 @@ Color *color_from_palette(PaletteColor pc) {
     class FromPaletteColor : public Color {
 
         const PaletteColor pc;
-        ColorRGB color;
+        ColorRGBA color;
         bool valid;
 
     public:
@@ -213,7 +213,7 @@ Color *color_from_palette(PaletteColor pc) {
 
         void invalidate() { valid = false; }
 
-        const ColorRGB value() {
+        const ColorRGBA value() {
             if (!valid) {
                 color = render_config.palette->at(pc);
                 valid = true;
@@ -238,7 +238,8 @@ Color *color_rgb_sin() {
     
     class RGBSinColor : public Color {
 
-        static ColorRGB compute_color() {
+        static ColorRGBA compute_color() {
+
             static uint8_t r, g, b;
             static const double pi_13 =      M_PI / 3;
             static const double pi_23 = 2 * (M_PI / 3);
@@ -249,10 +250,10 @@ Color *color_rgb_sin() {
             g = (sin(ticks / 300.0 + pi_13) + 1) * 127;
             b = (sin(ticks / 300.0 + pi_23) + 1) * 127;
         
-            return ColorRGB(r, g, b);               
+            return ColorRGBA(r, g, b);   
         }
 
-        ColorRGB color;
+        ColorRGBA color;
         bool valid;
 
     public:
@@ -262,7 +263,7 @@ Color *color_rgb_sin() {
 
         void invalidate() { valid = false; }
 
-        const ColorRGB value() {
+        const ColorRGBA value() {
             if (!valid) {
                 color = RGBSinColor::compute_color();
                 valid = true;
@@ -384,11 +385,12 @@ static CachingType max_caching_type(CachingType c1, CachingType c2) {
 
 
 
-static const ColorRGB color_multiply(const ColorRGB &c1, const ColorRGB &c2) {
-    return ColorRGB(
+static const ColorRGBA color_multiply(const ColorRGBA &c1, const ColorRGBA &c2) {
+    return ColorRGBA(
         (c1.r * c2.r) / 0xFF,
         (c1.g * c2.g) / 0xFF,
-        (c1.b * c2.b) / 0xFF
+        (c1.b * c2.b) / 0xFF,
+        (c1.a * c2.a) / 0xFF
     );
 }
 
@@ -399,7 +401,7 @@ static Color *combine_colors(Color *c1, Color *c2) {
         Color *const c1;
         Color *const c2;
 
-        ColorRGB color;
+        ColorRGBA color;
         bool valid;
 
     public:
@@ -412,7 +414,7 @@ static Color *combine_colors(Color *c1, Color *c2) {
             valid = false;
         }
 
-        const ColorRGB value() {
+        const ColorRGBA value() {
             if (!valid) {
                 color = color_multiply(c1->value(), c2->value());
                 valid = true;

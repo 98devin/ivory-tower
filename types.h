@@ -31,6 +31,7 @@ public:
 
 /* Type of a standard 8x8x8 bit RGB color */
 struct ColorRGB {
+    
     uint8_t r, g, b;
 
     ColorRGB()
@@ -38,20 +39,22 @@ struct ColorRGB {
 
     ColorRGB(uint8_t r, uint8_t g, uint8_t b)
         : r(r), g(g), b(b) { }
-
 };
 
 
 /* Type of a color with added 8-bit alpha channel */
-struct ColorRGBA : ColorRGB {
+struct ColorRGBA : public ColorRGB {
+    
     uint8_t a;
 
     ColorRGBA()
         : ColorRGBA(0, 0, 0, 255) { }
 
-    ColorRGBA(uint8_t r, uint8_t b, uint8_t g, uint8_t a)
-        : ColorRGB(r, g, b), a(a) { }
+    ColorRGBA(ColorRGB &&c)
+        : ColorRGB(c), a(255) { }
 
+    ColorRGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
+        : ColorRGB(r, g, b), a(a) { }
 };
 
 

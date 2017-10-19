@@ -24,7 +24,7 @@ typedef std::unordered_map<Tile, SDL_Texture *> TextureStore;
 /* 
     A map from palette layers to colors, e.g. a palette
 */
-typedef std::unordered_map<PaletteColor, const ColorRGB> Palette;
+typedef std::unordered_map<PaletteColor, const ColorRGBA> Palette;
 
 
 /*

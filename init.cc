@@ -28,7 +28,7 @@ bool init() {
          SDL_WINDOW_SHOWN
     );
 
-    if (window == NULL) {
+    if (window == nullptr) {
         fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
         SDL_Quit();
         return false;
@@ -41,7 +41,7 @@ bool init() {
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
     );
 
-    if (renderer == NULL) {
+    if (renderer == nullptr) {
         fprintf(stderr, "SDL_CreateRenderer Error: %s\n", SDL_GetError());
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);
@@ -105,14 +105,14 @@ bool init_texture_store(
 
     SDL_Surface *file_surface = SDL_LoadBMP(bmp_path.c_str());
     
-    if (file_surface == NULL) {
+    if (file_surface == nullptr) {
         fprintf(stderr, "SDL_LoadBMP Error: %s", SDL_GetError());
         return false;
     }
 
     SDL_Texture *file_texture = SDL_CreateTextureFromSurface(renderer, file_surface);
 
-    if (file_texture == NULL) {
+    if (file_texture == nullptr) {
         fprintf(stderr, "SDL_CreateTextureFromSurface Error: %s", SDL_GetError());
         return false;
     }
@@ -140,7 +140,7 @@ bool init_texture_store(
             tile_size.second
         );
 
-        if (tex == NULL) {
+        if (tex == nullptr) {
             fprintf(stderr, "SDL_CreateTexture Error: %s", SDL_GetError());
             return false;
         }
@@ -153,7 +153,7 @@ bool init_texture_store(
         src_rect.x = tile_size.first  * pos.first;
         src_rect.y = tile_size.second * pos.second;
 
-        SDL_RenderCopy(renderer, file_texture, &src_rect, NULL);
+        SDL_RenderCopy(renderer, file_texture, &src_rect, nullptr);
 
         t_store->emplace(tile, tex);
 

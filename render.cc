@@ -36,14 +36,14 @@ bool draw_tile(Tile t, Pair<int8_t> pos, const Style &s) {
         fprintf(stderr, "Error: %s retrieving texture for tile: %d \n", e.what(), (uint16_t)t);
     }
 
-    if (tex == NULL) { 
-        fprintf(stderr, "Error: texture retrieved was NULL\n");
+    if (tex == nullptr) { 
+        fprintf(stderr, "Error: texture retrieved was null.\n");
         return false;
     }
 
     // Get the values relevant to rendering
     // from the style
-    const ColorRGB      color  = s.color();
+    const ColorRGBA     color  = s.color();
     const Pair<int16_t> offset = s.offset();
     const Pair<float>   scale  = s.scale();
 
@@ -58,9 +58,10 @@ bool draw_tile(Tile t, Pair<int8_t> pos, const Style &s) {
 
     // Set the color modifier so we use the correct color
     SDL_SetTextureColorMod(tex, color.r, color.g, color.b);
+    SDL_SetTextureAlphaMod(tex, color.a);
 
     // Perform the draw
-    if (SDL_RenderCopy(renderer, tex, NULL, &dest) < 0) {
+    if (SDL_RenderCopy(renderer, tex, nullptr, &dest) < 0) {
         fprintf(stderr, "SDL_RenderCopy Error: %s", SDL_GetError());
         return false;
     }

@@ -28,7 +28,7 @@ int main() {
     Style hover(offset_hover_wave());
     Style rainbo(color_rgb_sin());
 
-    Style style_0 = style_default();
+    Style style_0 { style_default() };
     Style style_1 = style_0.compose(rainbo);
 
     Style style_2 = style_0.compose(darken);

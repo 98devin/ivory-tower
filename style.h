@@ -23,7 +23,7 @@ enum class CachingType : uint16_t {
     a static ColorRGB value or a dynamic
     RGB color value.
 */
-class Color : public Value<ColorRGB> {
+class Color : public Value<ColorRGBA> {
 
     static std::vector<Color*> dynamic_colors;
     
@@ -104,7 +104,7 @@ public:
     Style(Offset*);
     Style(Scale*);
 
-    const ColorRGB      color()  const;
+    const ColorRGBA     color()  const;
     const Pair<int16_t> offset() const;
     const Pair<float>   scale()  const;
 
