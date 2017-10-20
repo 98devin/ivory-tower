@@ -49,7 +49,7 @@ int main() {
     SDL_Event e;
 
     // Main loop
-    while (1) {
+    for (;;) {
 
         update_globals();
 

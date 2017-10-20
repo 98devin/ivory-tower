@@ -30,7 +30,7 @@ class Color : public Value<ColorRGBA> {
 public:
 
     Color(CachingType);
-    ~Color();
+    virtual ~Color();
 
     static void invalidate_dynamic();
     
@@ -39,6 +39,26 @@ public:
     const CachingType cache_type;
     
 };
+
+/* 
+    The most simple instance of the Color class.
+*/
+class StaticColor : public Color {
+    
+    const ColorRGBA val;
+
+public:
+
+    StaticColor(uint8_t, uint8_t, uint8_t, uint8_t);
+    StaticColor(ColorRGBA *);
+
+    void invalidate() override;
+
+    const ColorRGBA value() override;
+
+};
+
+
 
 /*
     Type of a generic `Offset` being either
@@ -51,7 +71,7 @@ class Offset : public Value<Pair<int16_t>> {
 public:
     
     Offset(CachingType);
-    ~Offset();
+    virtual ~Offset();
 
     static void invalidate_dynamic();
     
@@ -60,6 +80,26 @@ public:
     const CachingType cache_type;
     
 };
+
+/*
+    The most simple instance of the Offset class.
+*/
+class StaticOffset : public Offset {
+    
+    const Pair<int16_t> val;
+
+public:
+
+    StaticOffset(int16_t x_offset, int16_t y_offset);
+    StaticOffset(Pair<int16_t> *);
+
+    void invalidate() override;
+
+    const Pair<int16_t> value() override;
+
+};
+    
+
 
 /*
     Type of a `Scale` being either
@@ -72,7 +112,7 @@ class Scale : public Value<Pair<float>> {
 public:
     
     Scale(CachingType);
-    ~Scale();
+    virtual ~Scale();
 
     static void invalidate_dynamic();
     
@@ -81,7 +121,26 @@ public:
     const CachingType cache_type;
 
 };
+  
+/*
+    The most simple instance of the Scale class.
+*/
+class StaticScale : public Scale {
     
+    const Pair<float> val;
+
+public:
+
+    StaticScale(float x_scale, float y_scale);
+    StaticScale(Pair<float> *);
+    
+    void invalidate() override;
+
+    const Pair<float> value() override;
+
+};
+
+
 
 /*
     Information meant to accompany a Renderer_Config to

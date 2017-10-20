@@ -25,6 +25,7 @@ template <typename T>
 class Value {
 public:
     virtual const T value() = 0;
+    virtual operator const T() { return value(); }
 };
 
 

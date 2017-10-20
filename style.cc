@@ -117,64 +117,39 @@ const Pair<float> Style::scale() const {
 */
 
 
+StaticColor::StaticColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
+    : Color(CachingType::STATIC), val(r, g, b, a) { }
 
-class StaticColor : public Color {
+StaticColor::StaticColor(ColorRGBA *val) 
+    : Color(CachingType::STATIC), val{*val} { }
 
-    const ColorRGBA val;
+void StaticColor::invalidate() { }
 
-public:
-
-    StaticColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
-        : Color(CachingType::STATIC), val(r, g, b, a) { }
-
-    StaticColor(ColorRGBA *val) 
-        : Color(CachingType::STATIC), val{*val} { }
-
-    void invalidate() { }
-
-    const ColorRGBA value() { return val; }
-
-};
+const ColorRGBA StaticColor::value() { return val; }
 
 
 
-class StaticOffset : public Offset {
+StaticOffset::StaticOffset(int16_t x_offset, int16_t y_offset)
+    : Offset(CachingType::STATIC), val(x_offset, y_offset) { }
 
-    const Pair<int16_t> val;
+StaticOffset::StaticOffset(Pair<int16_t> *val)
+    : Offset(CachingType::STATIC), val{*val} { }
 
-public:
+void StaticOffset::invalidate() { }
 
-    StaticOffset(int16_t x_offset, int16_t y_offset)
-        : Offset(CachingType::STATIC), val(x_offset, y_offset) { }
-    
-    StaticOffset(Pair<int16_t> *val)
-        : Offset(CachingType::STATIC), val{*val} { }
-    
-    void invalidate() { }
-
-    const Pair<int16_t> value() { return val; }
-};
+const Pair<int16_t> StaticOffset::value() { return val; }
 
 
 
-class StaticScale : public Scale {
+StaticScale::StaticScale(float x_scale, float y_scale)
+    : Scale(CachingType::STATIC), val(x_scale, y_scale) { }  
 
-    const Pair<float> val;
+StaticScale::StaticScale(Pair<float> *val) 
+    : Scale(CachingType::STATIC), val{*val} { }
 
-public:
+void StaticScale::invalidate() { }
 
-    StaticScale(float x_scale, float y_scale)
-        : Scale(CachingType::STATIC), val(x_scale, y_scale) { }
-    
-    StaticScale(Pair<float> *val) 
-        : Scale(CachingType::STATIC), val{*val} { }
-    
-    void invalidate() { }
-
-    const Pair<float> value() { return val; }
-};
-
-
+const Pair<float> StaticScale::value() { return val; }
 
 
 /*
@@ -226,7 +201,7 @@ Color *color_from_palette(PaletteColor pc) {
     static std::unordered_map<PaletteColor, FromPaletteColor*> palette_color(static_cast<size_t>(PaletteColor::COLOR_COUNT));
     
     if (!palette_color.count(pc)) {
-        palette_color.insert(std::make_pair(pc, new FromPaletteColor(pc)));
+        palette_color.emplace(pc, new FromPaletteColor(pc));
     }
 
     return palette_color.at(pc);
