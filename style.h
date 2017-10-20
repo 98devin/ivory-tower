@@ -212,3 +212,4 @@ Style style_rgb_sin(void);
     proper updates.
 */
 void invalidate_rendering_caches();
+

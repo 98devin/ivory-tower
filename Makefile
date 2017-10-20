@@ -4,6 +4,7 @@ CCFLAGS = -std=c++11 `sdl2-config --cflags --libs`
 INCLUDEFLAGS = -I.
 LINKFLAGS = -lm -lSDL2main -lSDL2
 
+
 # decide executable extension
 ifeq ($(OS),Windows_NT)
 EXT = exe
@@ -33,9 +34,10 @@ demo: release
 cleaner: clean
 	rm -f ./main.$(EXT)
 
+
 clean:
 	rm -f *.o
 
 
-%.o: %.cc
-	$(CC) -c $(CCFLAGS) $(INCLUDEFLAGS) $*.cc
+.cc.o:
+	$(CC) -c -o $@ $< $(CCFLAGS) $(INCLUDEFLAGS)

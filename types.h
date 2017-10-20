@@ -10,15 +10,8 @@ template <typename T>
 using Pair = std::pair<T, T>;
 */
 
-template <typename T>
-using Pair = std::pair<T, T>;
-
-
-enum class ValueType : unsigned char {
-    STATIC,
-    DYNAMIC,
-    DYNAMIC_NOCACHE,
-};
+template <typename T, typename U = T>
+using Pair = std::pair<T, U>;
 
 
 template <typename T>

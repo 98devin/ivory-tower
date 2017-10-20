@@ -14,8 +14,16 @@
 /* Primary render configuration */
 RenderConfig render_config(
     Mappings::default_palette(),
-    std::make_pair<uint8_t, uint8_t>(16u, 16u)
+    { 16, 16 }
 );
+
+
+
+/* The primary window */
+SDL_Window *window;
+
+/* The primary renderer */
+SDL_Renderer *renderer;
 
 
 
@@ -30,8 +38,11 @@ static uint32_t ticks_delta = 0;
 const uint32_t get_ticks_delta() { return ticks_delta; }
 
 
+
+/* Whether the tick counters have been initialized yet */
 static bool initialized_ticks = false;
 
+/* Initialize, for the first time, the tick counters. */
 static void init_tick_counts() {
     
     ticks_total = SDL_GetTicks();
@@ -40,9 +51,10 @@ static void init_tick_counts() {
 
 }
 
-
+/* Update the tick counters to reflect the passage of time. */
 void update_tick_counts() {
 
+    // make sure not to re-initialize if we already have
     if (!initialized_ticks) {
         init_tick_counts();
         return;
@@ -55,9 +67,3 @@ void update_tick_counts() {
 
 }
 
-
-/* The primary window */
-SDL_Window *window;
-
-/* The primary renderer */
-SDL_Renderer *renderer;
