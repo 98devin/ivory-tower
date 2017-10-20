@@ -46,10 +46,10 @@ extern SDL_Renderer *renderer;
 
 
 /* Total ticks since game launch */
-const uint32_t get_ticks_total();
+uint32_t get_ticks_total();
 
 /* Ticks since last frame */
-const uint32_t get_ticks_delta();
+uint32_t get_ticks_delta();
 
 /* update the ticks for this frame */
 void update_tick_counts();

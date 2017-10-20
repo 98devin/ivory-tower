@@ -30,12 +30,12 @@ SDL_Renderer *renderer;
 /* Total ticks since game launch */
 static uint32_t ticks_total = 0;
 
-const uint32_t get_ticks_total() { return ticks_total; }
+uint32_t get_ticks_total() { return ticks_total; }
 
 /* Ticks since last frame */
 static uint32_t ticks_delta = 0;
 
-const uint32_t get_ticks_delta() { return ticks_delta; }
+uint32_t get_ticks_delta() { return ticks_delta; }
 
 
 

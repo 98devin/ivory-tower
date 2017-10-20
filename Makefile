@@ -19,6 +19,9 @@ main: main.o state.o render.o init.o mappings.o style.o
 	$(CC) -o main.$(EXT) main.o state.o render.o init.o mappings.o style.o $(CCFLAGS) $(LINKFLAGS)
 
 
+debug++: CCFLAGS += -Wpedantic -Wextra -Werror
+debug++: debug
+
 debug: CCFLAGS += -g -O0 -Wall
 debug: main
 

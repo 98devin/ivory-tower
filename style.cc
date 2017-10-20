@@ -184,7 +184,7 @@ Color *color_from_palette(PaletteColor pc) {
     public:
         
         FromPaletteColor(PaletteColor pc)
-            : Color(CachingType::DYNAMIC), pc(pc), color(render_config.palette->at(pc)) { }
+            : Color(CachingType::DYNAMIC), pc{pc}, color{render_config.palette->at(pc)}, valid{true} { }
 
         void invalidate() { valid = false; }
 
@@ -234,7 +234,7 @@ Color *color_rgb_sin() {
     public:
 
         RGBSinColor()
-            : Color(CachingType::DYNAMIC), color{RGBSinColor::compute_color()}, valid(true) { }
+            : Color(CachingType::DYNAMIC), color{RGBSinColor::compute_color()}, valid{true} { }
 
         void invalidate() { valid = false; }
 
@@ -274,7 +274,7 @@ Offset *offset_hover() {
     public:
 
         HoverOffset()
-            : Offset(CachingType::DYNAMIC), offset(HoverOffset::compute_offset()), valid(true) { }
+            : Offset(CachingType::DYNAMIC), offset{HoverOffset::compute_offset()}, valid{true} { }
 
         void invalidate() { valid = false; }
 
@@ -538,7 +538,7 @@ Style style_default() {
         offset_zero(),
         scale_default()
     );
-};
+}
 
 
 /* Style which fetches the color from the render_config's palette */
