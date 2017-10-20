@@ -43,7 +43,7 @@ extern SDL_Window   *window;
 /* Primary renderer for game */
 extern SDL_Renderer *renderer;
 
-
+ 
 
 /* Total ticks since game launch */
 uint32_t get_ticks_total();

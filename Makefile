@@ -1,8 +1,23 @@
 
 CC = g++
-CCFLAGS = -std=c++11 `sdl2-config --cflags --libs`
+CCFLAGS = -std=c++11 
 INCLUDEFLAGS = -I.
-LINKFLAGS = -lm -lSDL2main -lSDL2
+LINKFLAGS = -lm `sdl2-config --cflags --libs`
+
+# name of the executable to produce
+EXE = ivory-tower
+# location for the executable
+EXE_LOC = ./
+
+# source files used in building
+SRCS = main.cc init.cc render.cc state.cc style.cc mappings.cc
+
+# object files
+OBJS = $(SRCS:.cc=.o)
+
+# dependency files
+DEPS = $(SRCS:.cc=.d)
+-include $(DEPS)
 
 
 # decide executable extension
@@ -15,32 +30,37 @@ endif
 
 all: debug
 
-main: main.o state.o render.o init.o mappings.o style.o
-	$(CC) -o main.$(EXT) main.o state.o render.o init.o mappings.o style.o $(CCFLAGS) $(LINKFLAGS)
+$(EXE): $(OBJS)
+	$(CC) -o $(EXE_LOC)$(EXE).$(EXT) $^ $(CCFLAGS) $(LINKFLAGS)
 
+
+
+debug: CCFLAGS += -g -O0 -Wall
+debug: $(EXE)
 
 debug++: CCFLAGS += -Wpedantic -Wextra -Werror
 debug++: debug
 
-debug: CCFLAGS += -g -O0 -Wall
-debug: main
-
 
 release: CCFLAGS += -Ofast
-release: main
+release: $(EXE)
 
 
 demo: release
-	./main.$(EXT)
+	./$(EXE_LOC)$(EXE).$(EXT)
 
 
-cleaner: clean
-	rm -f ./main.$(EXT)
 
-
+.PHONY: clean
 clean:
-	rm -f *.o
+	rm -f $(OBJS) $(DEPS)
+	
+.PHONY: cleaner
+cleaner: clean
+	rm -f $(EXE_LOC)$(EXE).$(EXT)
 
 
-.cc.o:
-	$(CC) -c -o $@ $< $(CCFLAGS) $(INCLUDEFLAGS)
+
+%.o: %.cc
+	$(CC) -MM $< -MF $*.d -MT $*.o -MG -MP
+	$(CC) -c -o $*.o $< $(CCFLAGS) $(INCLUDEFLAGS)
