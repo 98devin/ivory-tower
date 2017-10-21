@@ -5,10 +5,7 @@
 #include <utility>
 #include <unordered_map>
 
-/*
-template <typename T>
-using Pair = std::pair<T, T>;
-*/
+
 
 template <typename T, typename U = T>
 using Pair = std::pair<T, U>;
@@ -54,7 +51,7 @@ struct ColorRGBA : public ColorRGB {
 
 
 /* The enumeration of each tile we can render */
-enum class Tile : uint16_t {
+enum class Tile : uint8_t {
 
     PLAIN_FILL,
 

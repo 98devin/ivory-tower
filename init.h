@@ -13,6 +13,7 @@
 */
 bool init();
 
+
 /*
     Make sure the global variables which
     update every frame are set properly,
