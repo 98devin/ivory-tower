@@ -1,6 +1,7 @@
 
 CC = g++
-CCFLAGS = -std=c++11 
+CCFLAGS = -std=c++11
+DEPFLAGS = -MMD -MF $*.d -MT $*.o -MP
 INCLUDEFLAGS = -I.
 LINKFLAGS = -lm `sdl2-config --cflags --libs`
 
@@ -62,5 +63,4 @@ cleaner: clean
 
 
 %.o: %.cc
-	$(CC) -MM $< -MF $*.d -MT $*.o -MG -MP
-	$(CC) -c -o $*.o $< $(CCFLAGS) $(INCLUDEFLAGS)
+	$(CC) -c -o $@ $< $(CCFLAGS) $(INCLUDEFLAGS) $(DEPFLAGS)
