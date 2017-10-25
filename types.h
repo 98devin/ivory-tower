@@ -7,15 +7,16 @@
 
 
 
-template <typename T, typename U = T>
+template <class T, class U = T>
 using Pair = std::pair<T, U>;
 
 
-template <typename T>
-class Value {
-public:
+template <class T>
+struct Value {
+
     virtual const T value() = 0;
-    virtual operator const T() { return value(); }
+    virtual operator const T () { return value(); }
+
 };
 
 
@@ -29,7 +30,7 @@ struct ColorRGB {
         : ColorRGB(0, 0, 0) { }
 
     ColorRGB(uint8_t r, uint8_t g, uint8_t b)
-        : r(r), g(g), b(b) { }
+        : r{r}, g{g}, b{b} { }
 };
 
 
@@ -42,10 +43,10 @@ struct ColorRGBA : public ColorRGB {
         : ColorRGBA(0, 0, 0, 255) { }
 
     ColorRGBA(ColorRGB &&c)
-        : ColorRGB(c), a(255) { }
+        : ColorRGB(c), a{255} { }
 
     ColorRGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
-        : ColorRGB(r, g, b), a(a) { }
+        : ColorRGB(r, g, b), a{a} { }
 };
 
 

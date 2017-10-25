@@ -11,12 +11,6 @@
 
 
 
-/* Primary render configuration */
-RenderConfig render_config(
-    Mappings::default_palette(),
-    { 16, 16 }
-);
-
 
 
 /* The primary window */
@@ -24,6 +18,14 @@ SDL_Window *window;
 
 /* The primary renderer */
 SDL_Renderer *renderer;
+
+
+
+/* Primary render configuration */
+RenderConfig render_config = RenderConfig(
+    *Mappings::default_palette(),
+    { 16, 16 }
+);
 
 
 

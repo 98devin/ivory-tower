@@ -184,13 +184,13 @@ Color *color_from_palette(PaletteColor pc) {
     public:
         
         FromPaletteColor(PaletteColor pc)
-            : Color(CachingType::DYNAMIC), pc{pc}, color{render_config.palette->at(pc)}, valid{true} { }
+            : Color(CachingType::DYNAMIC), pc{pc}, color{render_config.palette().at(pc)}, valid{true} { }
 
         void invalidate() { valid = false; }
 
         const ColorRGBA value() {
             if (!valid) {
-                color = render_config.palette->at(pc);
+                color = render_config.palette().at(pc);
                 valid = true;
             }
             return color;

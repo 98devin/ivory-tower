@@ -2,20 +2,94 @@
 #include <SDL2/SDL.h>
 #include <string.h>
 #include <unordered_map>
+#include <memory>
 
 #include "types.h"
 #include "state.h"
 #include "style.h"
 #include "render.h"
+#include "mappings.h"
+
+
+/* Implementation of TileMap */
+
+TileMap::TileMap(const std::string &tex_file, const Pair<uint8_t> tile_size, const TextureMapping *tex_map) {
+    
+    /* Compute rectangles based on the texture mapping and tile size */
+    
+    for (auto const& it : *tex_map) {
+        Tile t = it.first;
+        Pair<uint8_t> p = it.second;
+        legend.emplace(t, SDL_Rect{
+            p.first  * tile_size.first,
+            p.second * tile_size.second,
+            tile_size.first,
+            tile_size.second
+        });
+    }
+
+
+    /* Load in the texture from the specified file */
+
+    SDL_Surface *file_surface = SDL_LoadBMP(tex_file.c_str());
+    
+    if (file_surface == nullptr) {
+        fprintf(stderr, "SDL_LoadBMP Error: %s", SDL_GetError());
+        throw SDL_GetError();
+    }
+
+    SDL_Texture *file_texture = SDL_CreateTextureFromSurface(renderer, file_surface);
+
+    if (file_texture == nullptr) {
+        fprintf(stderr, "SDL_CreateTextureFromSurface Error: %s", SDL_GetError());
+        throw SDL_GetError();
+    }
+
+    SDL_FreeSurface(file_surface);
+
+    _atlas = file_texture;
+}
+
+SDL_Texture *TileMap::atlas() const { return _atlas; }
+
+SDL_Rect TileMap::region(Tile t) const { return legend.at(t); }
+
 
 
 /* Implementation of RenderConfig */
 
-RenderConfig::RenderConfig(Palette *palette, Pair<uint8_t> render_scale) 
-    : palette(palette), texture_store(new TextureStore), render_scale(render_scale) { }
 
-RenderConfig::~RenderConfig() {
-    delete texture_store;
+RenderConfig::RenderConfig(Palette &palette, Pair<uint8_t> render_scale)
+    : render_scale{render_scale}
+    , _palette{new Palette(palette)}
+    { }
+
+
+RenderConfig::RenderConfig(Palette &&palette, Pair<uint8_t> render_scale)
+    : render_scale{render_scale}
+    , _palette{&palette}
+    { }
+
+
+Palette &RenderConfig::palette() { return *_palette; }
+
+void RenderConfig::palette(Palette *&new_palette) {
+    _palette = std::unique_ptr<Palette>(new Palette(*new_palette));
+}
+
+void RenderConfig::palette(Palette *&&new_palette) {
+    _palette = std::unique_ptr<Palette>(new_palette);
+}
+
+
+const TileMap &RenderConfig::tile_map() { return *_tile_map; }
+
+void RenderConfig::tile_map(TileMap *&new_tile_map) {
+    _tile_map = std::unique_ptr<TileMap>(new TileMap(*new_tile_map));
+}
+
+void RenderConfig::tile_map(TileMap *&&new_tile_map) {
+    _tile_map = std::unique_ptr<TileMap>(new_tile_map);
 }
 
 
@@ -28,24 +102,13 @@ bool draw_tile(Tile t, Pair<int8_t> pos, const Style &s) {
     render_config.info.pos  = pos;
     render_config.info.tile = t;
 
-    // Find the texture associated with the tile
-    SDL_Texture *tex;
-    try { 
-        tex = render_config.texture_store->at(t);
-    } catch (const std::out_of_range& e) {
-        fprintf(stderr, "Error: %s retrieving texture for tile: %d \n", e.what(), (uint16_t)t);
-    }
-
-    if (tex == nullptr) { 
-        fprintf(stderr, "Error: texture retrieved was null.\n");
-        return false;
-    }
-
     // Get the values relevant to rendering
     // from the style
     const ColorRGBA     color  = s.color();
     const Pair<int16_t> offset = s.offset();
     const Pair<float>   scale  = s.scale();
+
+    SDL_Texture *tex = render_config.tile_map().atlas();
 
     // Compute the position where we should
     // be drawing the tile.
@@ -56,12 +119,14 @@ bool draw_tile(Tile t, Pair<int8_t> pos, const Style &s) {
         (int)(TILE_RENDER_HEIGHT * scale.second),        // h
     };
 
+    SDL_Rect src = render_config.tile_map().region(t);
+
     // Set the color modifier so we use the correct color
     SDL_SetTextureColorMod(tex, color.r, color.g, color.b);
     SDL_SetTextureAlphaMod(tex, color.a);
 
     // Perform the draw
-    if (SDL_RenderCopy(renderer, tex, nullptr, &dest) < 0) {
+    if (SDL_RenderCopy(renderer, tex, &src, &dest) < 0) {
         fprintf(stderr, "SDL_RenderCopy Error: %s", SDL_GetError());
         return false;
     }

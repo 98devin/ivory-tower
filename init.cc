@@ -48,16 +48,13 @@ bool init() {
         SDL_Quit();
         return false;
     }
-
-
-    // Load textures for tiles
-    if (!init_texture_store(
-        render_config.texture_store, 
-        Mappings::default_texture_map(),
-        "assets/textures/tilemap.bmp", 
-        std::make_pair(16, 16)
-    )) return false;
-
+    
+    // init render_config tile map
+    render_config.tile_map(new TileMap(
+        DEFAULT_TEXTURE_BMP,
+        DEFAULT_TILE_SIZE,
+        Mappings::default_texture_map()
+    ));
 
     // init random systems
     time_t t;
@@ -83,85 +80,5 @@ void update_globals() {
     // invalidate values so they will be updated
     // this frame during rendering
     invalidate_rendering_caches();
-
-}
-
-
-/*
-    Initialize the referenced Texture_Store
-    using the bpm file provided as a texture, and
-    the mapping to know where to find each texture in the image.
-    The `tile_size` is used to convert from grid coordinates
-    to actual pixel locations.
-
-    returns: whether the store was initialized successfully.
-*/
-bool init_texture_store(
-          TextureStore   *t_store,    /* texture store to initialize */
-    const TextureMapping *t_map,      /* texture mapping to use to init store */
-    const std::string     bmp_path,   /* name of the file to load for textures */
-    const Pair<uint8_t>   tile_size   /* how large each texture is in the file */
-) {
-
-    SDL_Surface *file_surface = SDL_LoadBMP(bmp_path.c_str());
-    
-    if (file_surface == nullptr) {
-        fprintf(stderr, "SDL_LoadBMP Error: %s", SDL_GetError());
-        return false;
-    }
-
-    SDL_Texture *file_texture = SDL_CreateTextureFromSurface(renderer, file_surface);
-
-    if (file_texture == nullptr) {
-        fprintf(stderr, "SDL_CreateTextureFromSurface Error: %s", SDL_GetError());
-        return false;
-    }
-
-    SDL_FreeSurface(file_surface);
-
-    // Maintain the previous render target so we can reset it for convenience
-    SDL_Texture *prev_target = SDL_GetRenderTarget(renderer);
-
-
-    // Declare rect to use as view of the file texture 
-    SDL_Rect src_rect{ 0, 0, tile_size.first, tile_size.second };
-
-
-    for (const auto& it : *t_map) {
-
-        Tile tile         = it.first;
-        Pair<uint8_t> pos = it.second;
-
-        SDL_Texture *tex = SDL_CreateTexture(
-            renderer,
-            SDL_PIXELFORMAT_ARGB8888,
-            SDL_TEXTUREACCESS_TARGET,
-            tile_size.first,
-            tile_size.second
-        );
-
-        if (tex == nullptr) {
-            fprintf(stderr, "SDL_CreateTexture Error: %s", SDL_GetError());
-            return false;
-        }
-
-        SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_BLEND);
-
-        SDL_SetRenderTarget(renderer, tex);
-
-        // Update rectangle to be at the correct coordinates
-        src_rect.x = tile_size.first  * pos.first;
-        src_rect.y = tile_size.second * pos.second;
-
-        SDL_RenderCopy(renderer, file_texture, &src_rect, nullptr);
-
-        t_store->emplace(tile, tex);
-
-    }
-
-    // Reset to previous render target.
-    SDL_SetRenderTarget(renderer, prev_target);
-
-    return true;
 
 }

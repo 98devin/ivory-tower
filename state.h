@@ -2,6 +2,7 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <string>
 
 #include "types.h"
 #include "render.h"
@@ -17,18 +18,26 @@
 
 // The size tiles will render (at 1:1 scale), regardless
 // of their actual texture size.
-constexpr static const uint16_t TILE_RENDER_WIDTH  = 32u;
-constexpr static const uint16_t TILE_RENDER_HEIGHT = 32u;
+static constexpr uint16_t TILE_RENDER_WIDTH  = 32u;
+static constexpr uint16_t TILE_RENDER_HEIGHT = 32u;
 
 // The number of tiles across and high
 // the screen will be capable of rendering (at 1:1 scale)
-constexpr static const uint16_t SCREEN_TILES_WIDE = 48u;
-constexpr static const uint16_t SCREEN_TILES_HIGH = 28u;
+static constexpr uint16_t SCREEN_TILES_WIDE = 48u;
+static constexpr uint16_t SCREEN_TILES_HIGH = 28u;
 
 // The height and width of the screen,
 // in pixels (computed from the above variables, naturally).
-constexpr static const uint16_t SCREEN_WIDTH  = (TILE_RENDER_WIDTH  * SCREEN_TILES_WIDE);
-constexpr static const uint16_t SCREEN_HEIGHT = (TILE_RENDER_HEIGHT * SCREEN_TILES_HIGH);
+static constexpr uint16_t SCREEN_WIDTH  = (TILE_RENDER_WIDTH  * SCREEN_TILES_WIDE);
+static constexpr uint16_t SCREEN_HEIGHT = (TILE_RENDER_HEIGHT * SCREEN_TILES_HIGH);
+
+
+
+// The default file to load textures from.
+static constexpr const char *DEFAULT_TEXTURE_BMP = "./assets/textures/tilemap.bmp";
+
+// The default tile size used for the above two properties
+static constexpr Pair<uint8_t> DEFAULT_TILE_SIZE = { 16u, 16u };
 
 
 

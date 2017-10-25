@@ -2,6 +2,8 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <string>
+#include <memory>
 
 #include "types.h"
 #include "style.h"
@@ -16,9 +18,24 @@ typedef std::unordered_map<Tile, Pair<uint8_t>> TextureMapping;
 
 
 /*
-    A map from tile id to texture, so that we can render tiles.
+    A map from tile id to texture region, so that we can render tiles.
 */
-typedef std::unordered_map<Tile, SDL_Texture *> TextureStore;
+class TileMap {
+public:
+
+    TileMap(const std::string &tex_file, const Pair<uint8_t> tile_size, const TextureMapping *);
+
+    SDL_Rect region(Tile) const;
+
+    SDL_Texture *atlas()  const;
+
+private:
+
+    std::unordered_map<Tile, SDL_Rect> legend;
+
+    SDL_Texture *_atlas;
+
+};
 
 
 /* 
@@ -37,15 +54,25 @@ struct RenderConfig {
         Tile tile;
     };
 
-    Palette         *const palette;
-    TextureStore    *const texture_store;
+    Palette         &palette();
+    void             palette(Palette *&);
+    void             palette(Palette *&&);
+
+    const TileMap   &tile_map();
+    void             tile_map(TileMap *&);
+    void             tile_map(TileMap *&&);
+    
     Pair<uint8_t>   render_scale;
+
     RenderInfo      info;
 
+    RenderConfig(Palette &,  Pair<uint8_t> render_scale);
+    RenderConfig(Palette &&, Pair<uint8_t> render_scale);
     
-    RenderConfig(Palette *, Pair<uint8_t> render_scale);
+private:
 
-    ~RenderConfig();
+    std::unique_ptr<Palette> _palette;
+    std::unique_ptr<TileMap> _tile_map;
 
 };
 

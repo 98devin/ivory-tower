@@ -198,11 +198,11 @@ Scale *scale_default();
     Preset styles
 */
 
-Style style_default(void);
+Style style_default();
 
 Style style_from_palette(PaletteColor);
 
-Style style_rgb_sin(void);
+Style style_rgb_sin();
 
 
 /*
